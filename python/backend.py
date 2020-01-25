@@ -11,15 +11,15 @@ def getInfo(fdcid):
     pprint(r.json())
     return r.json()
 
-def search(q):
+def search(search_term):
     _url = 'https://api.nal.usda.gov/fdc/v1/search'
-    _params = {'api_key':api_key, 'generalSearchInput':q}
+    _params = {'api_key':api_key, 'generalSearchInput':search_term}
 
     data = requests.get(url = _url, params = _params).json()
-    pprint(data['foods'][1])
+    pprint(data['foods'][0])
     foods = data['foods']
 
-    fdcid = data['foods'][1]['fdcId']
+    fdcid = foods[0]['fdcId']
     getInfo(fdcid)
 
 def main():
