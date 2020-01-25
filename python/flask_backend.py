@@ -7,11 +7,11 @@ app = Flask(__name__)
 
 @app.route('/mainPage', methods=['GET'])
 def mainPage():
-    return getMainPage()
+    return jsonify(getMainPage())
 
 @app.route('/restaurant', methods=['GET'])
 def getRestaurantInformation():
     restaurant = request.args.get('name')
-    return getRestaurant(restaurant)
+    return jsonify(getRestaurant(restaurant))
 
 app.run(host='0.0.0.0')
