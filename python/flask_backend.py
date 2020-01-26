@@ -14,4 +14,9 @@ def getRestaurantInformation():
     restaurant = request.args.get('name')
     return jsonify(getRestaurant(restaurant))
 
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    return jsonify(search(query))
+
 app.run(host='0.0.0.0')
