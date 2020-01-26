@@ -31,12 +31,12 @@ def getMainPage():
 
 def getRestaurant(restaurant):
     logo = getLogo(restaurant)
-    foods = getFoods(restaurant, brandIdDict[restaurant])
+    foods = getBrandFoods(restaurant, brandIdDict[restaurant])
     result = {'logo': logo, 'name': restaurant, 'foods': foods}
     pprint(result)
     return result
 
-def getFoods(brand, brandIds):
+def getBrandFoods(brand, brandIds):
     _url = 'https://trackapi.nutritionix.com/v2/search/instant'
     _params = {'brand_ids':brandIds, 'query':brand, 'branded':'true', 'common':'false', 'detailed': 'true'}
     _headers = {'x-app-id':nutritionApiKey[0], 'x-app-key':nutritionApiKey[1], 'x-remote-user-id':'0'}
@@ -44,34 +44,20 @@ def getFoods(brand, brandIds):
     return data['branded']
 
 def getNumFoods(brand, brandIds):
-    return len(getFoods(brand, brandIds))
+    return len(getBrandFoods(brand, brandIds))
+
+def search(query):
+    _url = 'https://trackapi.nutritionix.com/v2/search/instant'
+    _params = {'query': query, 'detailed': 'true'}
+    _headers = {'x-app-id':nutritionApiKey[0], 'x-app-key':nutritionApiKey[1], 'x-remote-user-id':'0'}
+    data = requests.get(url = _url, params = _params, headers = _headers).json()
+    result = data['branded'] + data['common']
+    return result
 
 def getLogo(restaurant):
     _url = 'https://company.clearbit.com/v1/domains/find?name=' + str(restaurant)
     data = requests.get(url = _url, auth = (clearbitApiKey, '')).json()
     return data['logo']
-
-def search(search_term):
-    _url = 'https://api.nal.usda.gov/fdc/v1/search'
-    _params = {'api_key':clearbitApiKey, 'generalSearchInput':search_term}
-
-    data = requests.get(url = _url, params = _params).json()
-    foods = data['foods']
-
-    id_list = list()
-    for i in range(len(foods)):
-        id_list.append(foods[0]['fdcId'])
-
-    return id_list
-
-def getNutrients(fdcid):
-    _url = 'https://api.nal.usda.gov/fdc/v1/' + str(fdcid)
-    _params = {'api_key':apiKey}
-
-    r = requests.get(url = _url, params = _params)
-    nutrients = r.json()['foodNutrients']
-
-    return nutrients
 
 def getMacros(nutrients):
     macros = dict()
@@ -93,15 +79,6 @@ def selectMacros(macros):
 
 def main():
     test = 'wendy\'s chicken nuggets'
-    #test = 'chicken nuggets'
-    # id_list = search(test)
-    # for id in id_list:
-    #     nutrients = getNutrients(id)
-    #     macros = getMacros(nutrients)
-    #     selectMacros(macros)
-    #     return
-    # getLogo('Burger King')
-    getMainPage()
-    getRestaurant('Burger King')
+    # search(test)
 
 main()
