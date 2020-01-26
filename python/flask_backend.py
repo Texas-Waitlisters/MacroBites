@@ -9,4 +9,9 @@ app = Flask(__name__)
 def mainPage():
     return getMainPage()
 
+@app.route('/restaurant', methods=['GET'])
+def getRestaurantInformation():
+    restaurant = request.args.get('name')
+    return getRestaurant(restaurant)
+
 app.run(host='0.0.0.0')

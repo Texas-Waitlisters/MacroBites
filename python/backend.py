@@ -3,11 +3,10 @@ from pprint import pprint
 
 selectedMacros = ['carbohydrates', 'protein', 'fat']
 defaultRestaurants = {'McDonald\'s':'513fbc1283aa2dc80c000053', 'Burger King':'513fbc1283aa2dc80c00000a', 'Wendy\'s':'513fbc1283aa2dc80c00000f', 'Chipotle':'513fbc1283aa2dc80c000002', 'Subway':'513fbc1283aa2dc80c000005', 'Panera Bread':'513fbc1283aa2dc80c00000c', 'Papa John\'s':'513fbc1283aa2dc80c00000e'}
+brandIdDict = json.loads(open('brand_ids.json').read())
 
 clearbitApiKey = open('.clearbit.api-key').read().strip('\n')
 nutritionApiKey = open('.nutrition.api-key').read().strip('\n').split('\n')
-
-print(nutritionApiKey)
 
 def getMainPage():
     results = list()
@@ -17,6 +16,11 @@ def getMainPage():
         name = restaurant
         numFoods = getNumFoods(restaurant, defaultRestaurants[restaurant])
     return {'logo': logo, 'name': name, 'numFoods': numFoods}
+
+def getRestaurant(restaurant):
+    logo = getLogo(restaurant)
+    foods = getFoods(restaurant, brandIdDict[restaurant])
+    return {'logo': logo, 'name': name, 'foods': foods}
 
 def getFoods(brand, brandIds):
     _url = 'https://trackapi.nutritionix.com/v2/search/instant'
@@ -28,9 +32,9 @@ def getFoods(brand, brandIds):
 def getNumFoods(brand, brandIds):
     return len(getFoods(brand, brandIds))
 
-def getLogo(company):
-    _url = 'https://company.clearbit.com/v1/domains/find?name=' + str(company)
-    data = requests.get(url = _url, auth=(clearbitApiKey, '')).json()
+def getLogo(restaurant):
+    _url = 'https://company.clearbit.com/v1/domains/find?name=' + str(restaurant)
+    data = requests.get(url = _url, auth = (clearbitApiKey, '')).json()
     return data['logo']
 
 def search(search_term):
