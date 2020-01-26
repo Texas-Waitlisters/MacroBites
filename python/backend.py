@@ -2,7 +2,7 @@ import clearbit, requests, json, re, pprint
 from pprint import pprint
 
 selectedMacros = ['carbohydrates', 'protein', 'fat']
-defaultRestaurants = {'McDonald\'s':'513fbc1283aa2dc80c000053', 'Burger King':'513fbc1283aa2dc80c00000a', 'Wendy\'s':'513fbc1283aa2dc80c00000f', 'Chipotle':'513fbc1283aa2dc80c000002', 'Subway':'513fbc1283aa2dc80c000005', 'Panera Bread':'513fbc1283aa2dc80c00000c', 'Papa John\'s':'513fbc1283aa2dc80c00000e'}
+defaultRestaurants = {'McDonald\'s':'513fbc1283aa2dc80c000053', 'Burger King':'513fbc1283aa2dc80c00000a', 'Wendy\'s':'513fbc1283aa2dc80c00000f', 'Subway':'513fbc1283aa2dc80c000005', 'Panera Bread':'513fbc1283aa2dc80c00000c', 'Papa John\'s':'513fbc1283aa2dc80c00000e'}
 
 def processJSON(file):
     raw = json.loads(open(file).read())
@@ -38,7 +38,7 @@ def getRestaurant(restaurant):
 
 def getFoods(brand, brandIds):
     _url = 'https://trackapi.nutritionix.com/v2/search/instant'
-    _params = {'brand_ids':brandIds, 'query':brand, 'branded':'true', 'common':'false'}
+    _params = {'brand_ids':brandIds, 'query':brand, 'branded':'true', 'common':'false', 'detailed': 'true'}
     _headers = {'x-app-id':nutritionApiKey[0], 'x-app-key':nutritionApiKey[1], 'x-remote-user-id':'0'}
     data = requests.get(url = _url, params = _params, headers = _headers).json()
     return data['branded']
