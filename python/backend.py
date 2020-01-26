@@ -3,7 +3,17 @@ from pprint import pprint
 
 selectedMacros = ['carbohydrates', 'protein', 'fat']
 defaultRestaurants = {'McDonald\'s':'513fbc1283aa2dc80c000053', 'Burger King':'513fbc1283aa2dc80c00000a', 'Wendy\'s':'513fbc1283aa2dc80c00000f', 'Chipotle':'513fbc1283aa2dc80c000002', 'Subway':'513fbc1283aa2dc80c000005', 'Panera Bread':'513fbc1283aa2dc80c00000c', 'Papa John\'s':'513fbc1283aa2dc80c00000e'}
-brandIdDict = json.loads(open('brand_ids.json').read())
+
+def processJSON(file):
+    raw = json.loads(open(file).read())
+    result = dict()
+    for item in raw:
+        result[item['name']] = item['id']
+    return result
+
+brandIdDict = processJSON('brand_ids.json')
+
+pprint(brandIdDict)
 
 clearbitApiKey = open('.clearbit.api-key').read().strip('\n')
 nutritionApiKey = open('.nutrition.api-key').read().strip('\n').split('\n')
@@ -15,12 +25,16 @@ def getMainPage():
         logo = getLogo(restaurant)
         name = restaurant
         numFoods = getNumFoods(restaurant, defaultRestaurants[restaurant])
-    return {'logo': logo, 'name': name, 'numFoods': numFoods}
+        results.append({'logo': logo, 'name': name, 'numFoods': numFoods})
+    pprint(results)
+    return results
 
 def getRestaurant(restaurant):
     logo = getLogo(restaurant)
     foods = getFoods(restaurant, brandIdDict[restaurant])
-    return {'logo': logo, 'name': name, 'foods': foods}
+    result = {'logo': logo, 'name': restaurant, 'foods': foods}
+    pprint(result)
+    return result
 
 def getFoods(brand, brandIds):
     _url = 'https://trackapi.nutritionix.com/v2/search/instant'
@@ -88,5 +102,6 @@ def main():
     #     return
     # getLogo('Burger King')
     getMainPage()
+    getRestaurant('Burger King')
 
 main()
