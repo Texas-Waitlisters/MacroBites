@@ -5,12 +5,8 @@ from backend import *
 
 app = Flask(__name__)
 
-@app.route('/search/barcode', methods=['GET'])
-def search_barcode():
-    #barcode = request.form['data']
-    barcode='070847811169'
-    data = search(barcode)
-    print(data)
-    return 'abc'
+@app.route('/mainPage', methods=['GET'])
+def mainPage():
+    return getMainPage()
 
 app.run(host='0.0.0.0')
